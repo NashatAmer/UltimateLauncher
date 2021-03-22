@@ -1141,12 +1141,12 @@ function populateJavaExecDetails(execPath){
         if(v.valid){
             const vendor = v.vendor != null ? ` (${v.vendor})` : ''
             if(v.version.major < 9) {
-                settingsJavaExecDetails.innerHTML = `Selected: Java ${v.version.major} Update ${v.version.update} (x${v.arch})${vendor}`
+                settingsJavaExecDetails.innerHTML = `Sélectionné: Java ${v.version.major} Mise à jour ${v.version.update} (x${v.arch})${vendor}`
             } else {
-                settingsJavaExecDetails.innerHTML = `Selected: Java ${v.version.major}.${v.version.minor}.${v.version.revision} (x${v.arch})${vendor}`
+                settingsJavaExecDetails.innerHTML = `Sélectionné: Java ${v.version.major}.${v.version.minor}.${v.version.revision} (x${v.arch})${vendor}`
             }
         } else {
-            settingsJavaExecDetails.innerHTML = 'Invalid Selection'
+            settingsJavaExecDetails.innerHTML = 'Selection invalide'
         }
     })
 }
@@ -1240,7 +1240,7 @@ function populateReleaseNotes(){
         },
         timeout: 2500
     }).catch(err => {
-        settingsAboutChangelogText.innerHTML = 'Failed to load release notes.'
+        settingsAboutChangelogText.innerHTML = 'Impossible de charger des notes de version.'
     })
 }
 
@@ -1288,27 +1288,27 @@ function settingsUpdateButtonStatus(text, disabled = false, handler = null){
  */
 function populateSettingsUpdateInformation(data){
     if(data != null){
-        settingsUpdateTitle.innerHTML = `New ${isPrerelease(data.version) ? 'Pre-release' : 'Release'} Available`
+        settingsUpdateTitle.innerHTML = `Nouveau ! ${isPrerelease(data.version) ? 'Beta' : 'Release'} est Disponible`
         settingsUpdateChangelogCont.style.display = null
         settingsUpdateChangelogTitle.innerHTML = data.releaseName
         settingsUpdateChangelogText.innerHTML = data.releaseNotes
         populateVersionInformation(data.version, settingsUpdateVersionValue, settingsUpdateVersionTitle, settingsUpdateVersionCheck)
         
         if(process.platform === 'darwin'){
-            settingsUpdateButtonStatus('Download from GitHub<span style="font-size: 10px;color: gray;text-shadow: none !important;">Close the launcher and run the dmg to update.</span>', false, () => {
+            settingsUpdateButtonStatus('Télécharger sur GitHub<span style="font-size: 10px;color: gray;text-shadow: none !important;">Fermez le launcher et exécutez le DMG à mettre à jour.</span>', false, () => {
                 shell.openExternal(data.darwindownload)
             })
         } else {
-            settingsUpdateButtonStatus('Downloading..', true)
+            settingsUpdateButtonStatus('Téléchargement..', true)
         }
     } else {
-        settingsUpdateTitle.innerHTML = 'You Are Running the Latest Version'
+        settingsUpdateTitle.innerHTML = 'Vous exécutez la dernière version'
         settingsUpdateChangelogCont.style.display = 'none'
         populateVersionInformation(remote.app.getVersion(), settingsUpdateVersionValue, settingsUpdateVersionTitle, settingsUpdateVersionCheck)
-        settingsUpdateButtonStatus('Check for Updates', false, () => {
+        settingsUpdateButtonStatus('Vérifier les mises à jour', false, () => {
             if(!isDev){
                 ipcRenderer.send('autoUpdateAction', 'checkForUpdate')
-                settingsUpdateButtonStatus('Checking for Updates..', true)
+                settingsUpdateButtonStatus('Vérification des mises à jour..', true)
             }
         })
     }
