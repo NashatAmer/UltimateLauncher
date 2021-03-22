@@ -85,7 +85,7 @@ function setLaunchEnabled(val){
 
 // Bind launch button
 document.getElementById('launch_button').addEventListener('click', function(e){
-    loggerLanding.log('Launching game..')
+    loggerLanding.log('Lancement du jeux..')
     const mcVersion = DistroManager.getDistribution().getServer(ConfigManager.getSelectedServer()).getMinecraftVersion()
     const jExe = ConfigManager.getJavaExecutable()
     if(jExe == null){
@@ -124,7 +124,7 @@ document.getElementById('avatarOverlay').onclick = (e) => {
 
 // Bind selected account
 function updateSelectedAccount(authUser){
-    let username = 'No Account Selected'
+    let username = 'Aucun compte sélectionné'
     if(authUser != null){
         if(authUser.displayName != null){
             username = authUser.displayName
@@ -144,7 +144,7 @@ function updateSelectedServer(serv){
     }
     ConfigManager.setSelectedServer(serv != null ? serv.getID() : null)
     ConfigManager.save()
-    server_selection_button.innerHTML = '\u2022 ' + (serv != null ? serv.getName() : 'No Server Selected')
+    server_selection_button.innerHTML = '\u2022 ' + (serv != null ? serv.getName() : 'Aucun serveur sélectionné')
     if(getCurrentView() === VIEWS.settings){
         animateModsTabRefresh()
     }
@@ -159,7 +159,7 @@ server_selection_button.onclick = (e) => {
 
 // Update Mojang Status Color
 const refreshMojangStatuses = async function(){
-    loggerLanding.log('Refreshing Mojang Statuses..')
+    loggerLanding.log('Reload des Statuts de Mojang..')
 
     let status = 'grey'
     let tooltipEssentialHTML = ''
@@ -207,7 +207,7 @@ const refreshMojangStatuses = async function(){
         }
 
     } catch (err) {
-        loggerLanding.warn('Unable to refresh Mojang service status.')
+        loggerLanding.warn('Impossible d\'actualiser le statut de service Mojang.')
         loggerLanding.debug(err)
     }
     
@@ -217,7 +217,7 @@ const refreshMojangStatuses = async function(){
 }
 
 const refreshServerStatus = async function(fade = false){
-    loggerLanding.log('Refreshing Server Status')
+    loggerLanding.log('Statut du serveur rafraîchissant')
     const serv = DistroManager.getDistribution().getServer(ConfigManager.getSelectedServer())
 
     let pLabel = 'SERVER'
@@ -227,12 +227,12 @@ const refreshServerStatus = async function(fade = false){
         const serverURL = new URL('my://' + serv.getAddress())
         const servStat = await ServerStatus.getStatus(serverURL.hostname, serverURL.port)
         if(servStat.online){
-            pLabel = 'PLAYERS'
+            pLabel = 'Joueurs'
             pVal = servStat.onlinePlayers + '/' + servStat.maxPlayers
         }
 
     } catch (err) {
-        loggerLanding.warn('Unable to refresh server status, assuming offline.')
+        loggerLanding.warn('Impossible d\'actualiser le statut du serveur, hors ligne ?')
         loggerLanding.debug(err)
     }
     if(fade){
@@ -287,7 +287,7 @@ let extractListener
  */
 function asyncSystemScan(mcVersion, launchAfter = true){
 
-    setLaunchDetails('Please wait..')
+    setLaunchDetails('S\'il vous plaît, attendez..')
     toggleLaunchArea(true)
     setLaunchPercentage(0, 100)
 
@@ -322,13 +322,13 @@ function asyncSystemScan(mcVersion, launchAfter = true){
                 // If the result is null, no valid Java installation was found.
                 // Show this information to the user.
                 setOverlayContent(
-                    'No Compatible<br>Java Installation Found',
-                    'In order to join WesterosCraft, you need a 64-bit installation of Java 8. Would you like us to install a copy? By installing, you accept <a href="http://www.oracle.com/technetwork/java/javase/terms/license/index.html">Oracle\'s license agreement</a>.',
-                    'Install Java',
-                    'Install Manually'
+                    'Pas de compatibilité <br> D\'installation Java trouvée',
+                    'Afin de rejoindre un serveur, vous avez besoin d\'une installation de 64 bits de Java 8. Voulez-vous que nous installions une copie?En installant, vous acceptez <a href="http://www.oracle.com/technetwork/java/javase/terms/license/index.html">Oracle\'s license agreement</a>.',
+                    'Installer java',
+                    'Installer manuellement'
                 )
                 setOverlayHandler(() => {
-                    setLaunchDetails('Preparing Java Download..')
+                    setLaunchDetails('Préparer Java Télécharger..')
                     sysAEx.send({task: 'changeContext', class: 'AssetGuard', args: [ConfigManager.getCommonDirectory(),ConfigManager.getJavaExecutable()]})
                     sysAEx.send({task: 'execute', function: '_enqueueOpenJDK', argsArr: [ConfigManager.getDataDirectory()]})
                     toggleOverlay(false)
@@ -337,10 +337,10 @@ function asyncSystemScan(mcVersion, launchAfter = true){
                     $('#overlayContent').fadeOut(250, () => {
                         //$('#overlayDismiss').toggle(false)
                         setOverlayContent(
-                            'Java is Required<br>to Launch',
-                            'A valid x64 installation of Java 8 is required to launch.<br><br>Please refer to our <a href="https://github.com/dscalzi/HeliosLauncher/wiki/Java-Management#manually-installing-a-valid-version-of-java">Java Management Guide</a> for instructions on how to manually install Java.',
-                            'I Understand',
-                            'Go Back'
+                            'Java est obligatoire',
+                            'Une installation valide x64 de Java 8 est requise pour lancer.<br><br>S\'il vous plaît se référer à notre <a href="https://github.com/vasolix/DiamondLauncher/wiki/Java-Management#manually-installing-a-valid-version-of-java">Java Management Guide</a> for instructions on how to manually install Java.',
+                            'Je comprends',
+                            'Annuler'
                         )
                         setOverlayHandler(() => {
                             toggleLaunchArea(false)
@@ -383,9 +383,9 @@ function asyncSystemScan(mcVersion, launchAfter = true){
                 // Oracle JRE enqueue failed. Probably due to a change in their website format.
                 // User will have to follow the guide to install Java.
                 setOverlayContent(
-                    'Unexpected Issue:<br>Java Download Failed',
-                    'Unfortunately we\'ve encountered an issue while attempting to install Java. You will need to manually install a copy. Please check out our <a href="https://github.com/dscalzi/HeliosLauncher/wiki">Troubleshooting Guide</a> for more details and instructions.',
-                    'I Understand'
+                    'Numéro inattendu: <br> téléchargement Java a échoué',
+                    'Malheureusement, nous avons rencontré un problème tout en essayant d\'installer Java.Vous devrez installer manuellement une copie.Veuillez consulter notre <a href="https://github.com/vasolix/DiamondLauncher/wiki"> Guide de dépannage </a> pour plus de détails et instructions.',
+                    'Je comprends'
                 )
                 setOverlayHandler(() => {
                     toggleOverlay(false)
@@ -484,12 +484,12 @@ function dlAsync(login = true){
 
     if(login) {
         if(ConfigManager.getSelectedAccount() == null){
-            loggerLanding.error('You must be logged into an account.')
+            loggerLanding.error('Vous devez être connecté dans un compte.')
             return
         }
     }
 
-    setLaunchDetails('Please wait..')
+    setLaunchDetails('S\'il vous plaît, attendez..')
     toggleLaunchArea(true)
     setLaunchPercentage(0, 100)
 
@@ -520,12 +520,12 @@ function dlAsync(login = true){
     })
     aEx.on('error', (err) => {
         loggerLaunchSuite.error('Error during launch', err)
-        showLaunchFailure('Error During Launch', err.message || 'See console (CTRL + Shift + i) for more details.')
+        showLaunchFailure('Erreur lors du lancement', err.message || 'Voir Console (Ctrl + Maj + i) Pour plus de détails.')
     })
     aEx.on('close', (code, signal) => {
         if(code !== 0){
             loggerLaunchSuite.error(`AssetExec exited with code ${code}, assuming error.`)
-            showLaunchFailure('Error During Launch', 'See console (CTRL + Shift + i) for more details.')
+            showLaunchFailure('Erreur lors du lancement', 'Voir Console (Ctrl + Maj + i) Pour plus de détails.')
         }
     })
 
@@ -609,13 +609,13 @@ function dlAsync(login = true){
                     
                     if(m.error.code === 'ENOENT'){
                         showLaunchFailure(
-                            'Download Error',
-                            'Could not connect to the file server. Ensure that you are connected to the internet and try again.'
+                            'Erreur de téléchargement',
+                            'Impossible de se connecter au serveur de fichiers.Assurez-vous que vous êtes connecté à Internet et réessayez.'
                         )
                     } else {
                         showLaunchFailure(
-                            'Download Error',
-                            'Check the console (CTRL + Shift + i) for more details. Please try again.'
+                            'Erreur de téléchargement',
+                            'Vérifiez la console (Ctrl + Shift + i) pour plus de détails.Veuillez réessayer.'
                         )
                     }
 
@@ -634,7 +634,7 @@ function dlAsync(login = true){
                 loggerLaunchSuite.error('Error during validation:', m.result)
 
                 loggerLaunchSuite.error('Error during launch', m.result.error)
-                showLaunchFailure('Error During Launch', 'Please check the console (CTRL + Shift + i) for more details.')
+                showLaunchFailure('Erreur lors du lancement', 'Veuillez vérifier la console (Ctrl + Shift + i) pour plus de détails.')
 
                 allGood = false
             }
@@ -646,15 +646,15 @@ function dlAsync(login = true){
                 const authUser = ConfigManager.getSelectedAccount()
                 loggerLaunchSuite.log(`Sending selected account (${authUser.displayName}) to ProcessBuilder.`)
                 let pb = new ProcessBuilder(serv, versionData, forgeData, authUser, remote.app.getVersion())
-                setLaunchDetails('Launching game..')
+                setLaunchDetails('Lancement du jeu ..')
 
                 // const SERVER_JOINED_REGEX = /\[.+\]: \[CHAT\] [a-zA-Z0-9_]{1,16} joined the game/
-                const SERVER_JOINED_REGEX = new RegExp(`\\[.+\\]: \\[CHAT\\] ${authUser.displayName} joined the game`)
+                const SERVER_JOINED_REGEX = new RegExp(`\\[.+\\]: \\[CHAT\\] ${authUser.displayName} à rejoint le jeu`)
 
                 const onLoadComplete = () => {
                     toggleLaunchArea(false)
                     if(hasRPC){
-                        DiscordWrapper.updateDetails('Loading game..')
+                        DiscordWrapper.updateDetails('Jeu en cours de chargement..')
                     }
                     proc.stdout.on('data', gameStateChange)
                     proc.stdout.removeListener('data', tempListener)
@@ -681,9 +681,9 @@ function dlAsync(login = true){
                 const gameStateChange = function(data){
                     data = data.trim()
                     if(SERVER_JOINED_REGEX.test(data)){
-                        DiscordWrapper.updateDetails('Exploring the Realm!')
+                        DiscordWrapper.updateDetails('Explore le monde')
                     } else if(GAME_JOINED_REGEX.test(data)){
-                        DiscordWrapper.updateDetails('Sailing to Westeros!')
+                        DiscordWrapper.updateDetails('Viste le monde')
                     }
                 }
 
@@ -703,7 +703,7 @@ function dlAsync(login = true){
                     proc.stdout.on('data', tempListener)
                     proc.stderr.on('data', gameErrorListener)
 
-                    setLaunchDetails('Done. Enjoy the server!')
+                    setLaunchDetails('Lets go!')
 
                     // Init Discord Hook
                     const distro = DistroManager.getDistribution()
@@ -862,7 +862,7 @@ let newsLoadingListener = null
  */
 function setNewsLoading(val){
     if(val){
-        const nLStr = 'Checking for News'
+        const nLStr = 'Vérification des Actualités'
         let dotStr = '..'
         nELoadSpan.innerHTML = nLStr + dotStr
         newsLoadingListener = setInterval(() => {
