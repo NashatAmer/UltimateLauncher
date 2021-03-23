@@ -229,7 +229,7 @@ const refreshServerStatus = async function(fade = false){
         const serverURL = new URL('my://' + serv.getAddress())
         const servStat = await ServerStatus.getStatus(serverURL.hostname, serverURL.port)
         if(servStat.online){
-            pLabel = 'PLAYERS'
+            pLabel = 'JOUEURS'
             pVal = servStat.onlinePlayers + '/' + servStat.maxPlayers
         }
 
@@ -492,7 +492,7 @@ function dlAsync(login = true){
         }
     }
 
-    setLaunchDetails('Please wait..')
+    setLaunchDetails('S\'il vous plaît, attendez..')
     toggleLaunchArea(true)
     setLaunchPercentage(0, 100)
 
@@ -523,12 +523,12 @@ function dlAsync(login = true){
     })
     aEx.on('error', (err) => {
         loggerLaunchSuite.error('Error during launch', err)
-        showLaunchFailure('Error During Launch', err.message || 'See console (CTRL + Shift + i) for more details.')
+        showLaunchFailure('Erreur lors du lancement', err.message || 'Voir Console (Ctrl + Maj + i) Pour plus de détails.')
     })
     aEx.on('close', (code, signal) => {
         if(code !== 0){
             loggerLaunchSuite.error(`AssetExec exited with code ${code}, assuming error.`)
-            showLaunchFailure('Error During Launch', 'See console (CTRL + Shift + i) for more details.')
+            showLaunchFailure('Erreur lors du lancement', 'Voir Console (Ctrl + Maj + i) Pour plus de détails.')
         }
     })
 
@@ -602,7 +602,7 @@ function dlAsync(login = true){
                         progressListener = null
                     }
 
-                    setLaunchDetails('Preparing to launch..')
+                    setLaunchDetails('Préparation au lancement..')
                     break
             }
         } else if(m.context === 'error'){
@@ -612,13 +612,13 @@ function dlAsync(login = true){
                     
                     if(m.error.code === 'ENOENT'){
                         showLaunchFailure(
-                            'Download Error',
-                            'Could not connect to the file server. Ensure that you are connected to the internet and try again.'
+                            'Erreur de téléchargement',
+                            'Impossible de se connecter au serveur de fichiers.Assurez-vous que vous êtes connecté à Internet et réessayez.'
                         )
                     } else {
                         showLaunchFailure(
-                            'Download Error',
-                            'Check the console (CTRL + Shift + i) for more details. Please try again.'
+                            'Erreur de téléchargement',
+                            'Vérifiez la console (Ctrl + Shift + i) pour plus de détails.Veuillez réessayer.'
                         )
                     }
 
@@ -636,8 +636,8 @@ function dlAsync(login = true){
             if(m.result.forgeData == null || m.result.versionData == null){
                 loggerLaunchSuite.error('Error during validation:', m.result)
 
-                loggerLaunchSuite.error('Error during launch', m.result.error)
-                showLaunchFailure('Error During Launch', 'Please check the console (CTRL + Shift + i) for more details.')
+                loggerLaunchSuite.error('Erreur lors du lancement', m.result.error)
+                showLaunchFailure('Erreur lors du lancement', 'Veuillez vérifier la console (Ctrl + Shift + i) pour plus de détails.')
 
                 allGood = false
             }
@@ -649,12 +649,12 @@ function dlAsync(login = true){
                 const authUser = ConfigManager.getSelectedAccount()
                 loggerLaunchSuite.log(`Sending selected account (${authUser.displayName}) to ProcessBuilder.`)
                 let pb = new ProcessBuilder(serv, versionData, forgeData, authUser, remote.app.getVersion())
-                setLaunchDetails('Launching game..')
+                setLaunchDetails('Lancement du jeu')
 
                 const onLoadComplete = () => {
                     toggleLaunchArea(false)
                     if(hasRPC){
-                        DiscordWrapper.updateDetails('Loading game..')
+                        DiscordWrapper.updateDetails('Chargement du jeu..')
                     }
                     proc.stdout.on('data', gameStateChange)
                     proc.stdout.removeListener('data', tempListener)
@@ -681,9 +681,9 @@ function dlAsync(login = true){
                 const gameStateChange = function(data){
                     data = data.trim()
                     if(SERVER_JOINED_REGEX.test(data)){
-                        DiscordWrapper.updateDetails('Exploring the Realm!')
+                        DiscordWrapper.updateDetails('Explorer le royaume!')
                     } else if(GAME_JOINED_REGEX.test(data)){
-                        DiscordWrapper.updateDetails('Sailing to Westeros!')
+                        DiscordWrapper.updateDetails('Navigue vers Minecraft!')
                     }
                 }
 
@@ -691,7 +691,7 @@ function dlAsync(login = true){
                     data = data.trim()
                     if(data.indexOf('Could not find or load main class net.minecraft.launchwrapper.Launch') > -1){
                         loggerLaunchSuite.error('Game launch failed, LaunchWrapper was not downloaded properly.')
-                        showLaunchFailure('Error During Launch', 'The main file, LaunchWrapper, failed to download properly. As a result, the game cannot launch.<br><br>To fix this issue, temporarily turn off your antivirus software and launch the game again.<br><br>If you have time, please <a href="https://github.com/dscalzi/HeliosLauncher/issues">submit an issue</a> and let us know what antivirus software you use. We\'ll contact them and try to straighten things out.')
+                        showLaunchFailure('Erreur lors du lancement', 'Le fichier principal, LaunchWrapper, n\'a pas été téléchargé correctement.En conséquence, le jeu ne peut pas se lancer. <br> <br> Pour résoudre ce problème, désactivez temporairement votre logiciel antivirus et lancez le jeu à nouveau. <br> <br> Si vous avez le temps, s\'il vous plaît <un href = "https: //github.com/vasolix/UltimateLauncher/issues "> Soumettez un problème </a> et laissez-nous savoir quel logiciel antivirus que vous utilisez.Nous les contacterons et essayons de redresser les choses.')
                     }
                 }
 
@@ -703,7 +703,7 @@ function dlAsync(login = true){
                     proc.stdout.on('data', tempListener)
                     proc.stderr.on('data', gameErrorListener)
 
-                    setLaunchDetails('Done. Enjoy the server!')
+                    setLaunchDetails('Profitez du serveur!')
 
                     // Init Discord Hook
                     const distro = DistroManager.getDistribution()
@@ -711,7 +711,7 @@ function dlAsync(login = true){
                         DiscordWrapper.initRPC(distro.discord, serv.discord)
                         hasRPC = true
                         proc.on('close', (code, signal) => {
-                            loggerLaunchSuite.log('Shutting down Discord Rich Presence..')
+                            loggerLaunchSuite.log('Fermer la décharge Riche présence..')
                             DiscordWrapper.shutdownRPC()
                             hasRPC = false
                             proc = null
@@ -721,7 +721,7 @@ function dlAsync(login = true){
                 } catch(err) {
 
                     loggerLaunchSuite.error('Error during launch', err)
-                    showLaunchFailure('Error During Launch', 'Please check the console (CTRL + Shift + i) for more details.')
+                    showLaunchFailure('Erreur lors du lancement', 'Veuillez vérifier la console (Ctrl + Shift + i) pour plus de détails.')
 
                 }
             }
@@ -735,7 +735,7 @@ function dlAsync(login = true){
     // Begin Validations
 
     // Validate Forge files.
-    setLaunchDetails('Loading server information..')
+    setLaunchDetails('Chargement d\'informations sur le serveur..')
 
     refreshDistributionIndex(true, (data) => {
         onDistroRefresh(data)
@@ -750,7 +750,7 @@ function dlAsync(login = true){
         }, (err) => {
             loggerLaunchSuite.error('Unable to refresh distribution index.', err)
             if(DistroManager.getDistribution() == null){
-                showLaunchFailure('Fatal Error', 'Could not load a copy of the distribution index. See the console (CTRL + Shift + i) for more details.')
+                showLaunchFailure('Erreur fatale', 'Impossible de charger une copie de l\'indice de distribution.Voir la console (Ctrl + Shift + i) pour plus de détails.')
 
                 // Disconnect from AssetExec
                 aEx.disconnect()
@@ -775,9 +775,9 @@ function checkCurrentServer(errorOverlay = true){
                 if(!ConfigManager.getServerCodes().includes(selectedServ.getServerCode())){
                     if(errorOverlay){
                         setOverlayContent(
-                            'Current Server Restricted!',
-                            'It seems that you no longer have the server code required to access this server! Please switch to a different server to play on.<br><br>If you feel this is an error, please contact the server administrator',
-                            'Switch Server'
+                            'Server actuel restreint!',
+                            'Il semble que vous n\'ayez plus le code serveur requis pour accéder à ce serveur!Veuillez passer à un autre serveur pour jouer. <br> <br> Si vous estimez que c\'est une erreur, veuillez contacter l\'administrateur du serveur.',
+                            'Changer de serveur.'
                         )
                         setOverlayHandler(() => {
                             toggleServerSelection(true)
