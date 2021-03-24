@@ -49,7 +49,7 @@ if(!isDev){
                 loggerAutoUpdaterSuccess.log('Nouvelle mise à jour disponible', info.version)
                 
                 if(process.platform === 'darwin'){
-                    info.darwindownload = `https://github.com/vasolix/DiamondLauncher/releases/download/v${info.version}/Diamond_Launcher-setup-${info.version}.dmg`
+                    info.darwindownload = `https://github.com/vasolix/UltimateLauncher/releases/download/v${info.version}/Ultimate_Launcher-setup-${info.version}.dmg`
                     showUpdateUI(info)
                 }
                 

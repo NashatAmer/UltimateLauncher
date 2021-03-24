@@ -18,8 +18,8 @@ function getCurrentPlatform(){
 builder.build({
     targets: (process.argv[2] != null && Platform[process.argv[2]] != null ? Platform[process.argv[2]] : getCurrentPlatform()).createTarget(),
     config: {
-        appId: 'diamondlauncher',
-        productName: 'Diamond-Launcher',
+        appId: 'ultimatelauncher',
+        productName: 'Ultimate Launcher',
         artifactName: '${productName}-setup-${version}.${ext}',
         copyright: 'Copyright © 2020-2021 Vasolix',
         directories: {
