@@ -43,13 +43,13 @@ if(!isDev){
         switch(arg){
             case 'checking-for-update':
                 loggerAutoUpdater.log('Checking for update..')
-                settingsUpdateButtonStatus('Checking for Updates..', true)
+                settingsUpdateButtonStatus('Vérification des mises à jour ..', true)
                 break
             case 'update-available':
                 loggerAutoUpdaterSuccess.log('Nouvelle mise à jour disponible', info.version)
                 
                 if(process.platform === 'darwin'){
-                    info.darwindownload = `https://github.com/vasolix/UltimateLauncher/releases/download/v${info.version}/Ultimate_Launcher-setup-${info.version}.dmg`
+                    info.darwindownload = `https://github.com/vasolix/UltimateLauncher/releases/download/v${info.version}/Ultimate-Launcher-setup-${info.version}.dmg`
                     showUpdateUI(info)
                 }
                 
